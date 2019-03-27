@@ -16,6 +16,7 @@ namespace ObjParser.Types
         public string UseMtl { get; set; }
         public int[] VertexIndexList { get; set; }
         public int[] TextureVertexIndexList { get; set; }
+        public int[] NormalIndexList { get; set; }
 
         public void LoadFromStringArray(string[] data)
         {
@@ -28,6 +29,7 @@ namespace ObjParser.Types
             int vcount = data.Count() - 1;
             VertexIndexList = new int[vcount];
             TextureVertexIndexList = new int[vcount];
+            NormalIndexList = new int[vcount];
 
 			bool success;
 
@@ -40,12 +42,25 @@ namespace ObjParser.Types
                 if (!success) throw new ArgumentException("Could not parse parameter as int");
                 VertexIndexList[i] = vindex;
 
-                if (parts.Count() > 1)
+                if (parts.Count() <= 1)
                 {
-                    success = int.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out vindex);
-                    if (success) {
-                        TextureVertexIndexList[i] = vindex;
-                    }
+                    continue;
+                }
+
+                success = int.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out vindex);
+                if (success) {
+                    TextureVertexIndexList[i] = vindex;
+                }
+
+                if (parts.Count() <= 2)
+                {
+                    continue;
+                }
+
+                success = int.TryParse(parts[2], NumberStyles.Any, CultureInfo.InvariantCulture, out vindex);
+                if (success)
+                {
+                    NormalIndexList[i] = vindex;
                 }
             }
         }

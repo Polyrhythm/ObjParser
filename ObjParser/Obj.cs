@@ -11,6 +11,7 @@ namespace ObjParser
 		public List<Vertex> VertexList;
 		public List<Face> FaceList;
 		public List<TextureVertex> TextureList;
+	    public List<Normal> NormalList;
 
 		public Extent Size { get; set; }
 
@@ -25,7 +26,8 @@ namespace ObjParser
             VertexList = new List<Vertex>();
             FaceList = new List<Face>();
             TextureList = new List<TextureVertex>();
-        }
+	        NormalList = new List<Normal>();
+	    }
 
         /// <summary>
         /// Load .obj from a filepath.
@@ -85,6 +87,7 @@ namespace ObjParser
 					}
 					writer.WriteLine(face);
 				}
+                NormalList.ForEach(n => writer.WriteLine(n));
 			}
 		}
 
@@ -171,7 +174,12 @@ namespace ObjParser
 						TextureList.Add(vt);
 						vt.Index = TextureList.Count();
 						break;
-
+                    case "vn":
+                        Normal n = new Normal();
+                        n.LoadFromStringArray(parts);
+                        NormalList.Add(n);
+                        n.Index = NormalList.Count();
+                        break;
 				}
 			}
 		}
